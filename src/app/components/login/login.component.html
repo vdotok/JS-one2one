@@ -1,0 +1,19 @@
+<div class="containerWrapper">
+  <img src="./assets/images/logo2.png" class="logo" />
+  <div class="innerWrapper">
+    <h6 class="wrapperHeading">Sign In</h6>
+    <p class="text-danger text-capitalize">{{formError}}</p>
+    <div class="inputsContainer form-group">
+      <form [formGroup]="loginForm" class="w-100" (submit)="onLogin()">
+        <input type="email" class="form-control" placeholder="Email/Username" formControlName="email" />
+        <form-errors [control]="loginForm.get('email')"></form-errors>
+        <input type="password" class="form-control" placeholder="Password" formControlName="password" />
+        <form-errors [control]="loginForm.get('password')"></form-errors>
+      </form>
+    </div>
+    <div class="buttonsContainer">
+      <button type="submit" class="signButton" (click)="onLogin()" [disabled]="loading">SIGN IN</button>
+      <h5 class="bottomLink"><a routerLink="/signup">SIGN UP</a></h5>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+.roomNameText {
+  font-family: manrope-semibold;
+  font-size: 34px;
+  line-height: 38px;
+  letter-spacing: -0.12px;
+  color: #31394d;
+}
+.chatbtn {
+  border-right: 1px solid #ebedf4;
+}
+
+.active {
+  background-color: #b0d7dd !important;
+  border: 1px solid #2196f3;
+}
+
+.selectuser {
+  justify-content: flex-end;
+  min-width: 30px;
+  padding-right: 5px;
+}

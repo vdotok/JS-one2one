@@ -1,0 +1,18 @@
+@use '~@angular/material' as mat;
+@import '~@angular/material/theming';
+
+@include mat.core();
+
+$app-primary: mat.define-palette(mat.$indigo-palette);
+$app-accent:  mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+$app-theme: mat.define-light-theme($app-primary, $app-accent);
+
+@mixin mix-app-theme($app-theme) {
+  $primary: map-get($app-theme, primary);
+  $accent: map-get($app-theme, accent);
+
+  /* .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+    background-color: mat.get-color-from-palette($primary);
+  } */
+}

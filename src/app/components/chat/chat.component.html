@@ -1,0 +1,172 @@
+<div class="row dashboardContainer">
+  <div class="col-sm-4 leftSide" [hidden]="isHideThread()">
+    <div class="leftSideHeader">
+      <img src="./assets/images/logo2.png" class="dashboardLogo" />
+    </div>
+    <div class="leftSideListContainer">
+      <div style="align-items: center; margin:0px" class="leftSectionHeader">
+        <h4 class="leftHeading">CHATROOMS</h4>
+      </div>
+
+      <div class="listingContainer fullHeight">
+        <div class="newChatSearchBox">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <img src="./assets/images/search.png" class="seacrchIcon" />
+            </div>
+            <input type="text" class="form-control" placeholder="Search" #searchInput />
+            <span class="loader" *ngIf="loading"></span>
+          </div>
+        </div>
+
+        <div class="leftSectionEmptyContainer" *ngIf="!AllUsers.length && !loading">
+          <p class="noAvailableText">No Available ChatRoom</p>
+          <p class="tapText">Tap and hold on any message to star it, so you can easily find it later.</p>
+        </div>
+
+        <div class="chatListContainer noHorizontalPadding">
+          <ng-container *ngFor="let user of AllUsers">
+            <div class="contactListCard hand">
+              <div class="contactListCardLeft">
+                <img src="./assets/images/user.png" class="ListCardIcon" />
+                <p class="ListCardName">{{user.full_name}}</p>
+              </div>
+              <div class="contactListCardRight mr-3">
+                <div></div>
+                <img src="./assets/images/call.png" class="ListCardButton hand" (click)="startAudioCall(user)" />
+                <img src="./assets/images/video-call.png" class="ListCardButton hand" (click)="startVideoCall(user)" />
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+    <div class="leftSideFooter">
+      <div class="logoutContainer" (click)="logout()">
+        <img src="./assets/images/log-out.png" class="logoutLogo" />
+        <span class="logoutText">LOG OUT {{currentUserData.full_name}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-8 rightSide" [hidden]="isHideChatScreen()">
+    <div class="rightSideHeader">
+      <!-- call buttons end -->
+    </div>
+    <div class="messagesBox">
+      <div class="callContainer" [ngClass]="calling.templateName == 'noCall' ? '' :'oncall' ">
+        <div [hidden]="isShowVideo()">
+          <div class="IncommingVideo border">
+            <video id="remoteVideo" muted height="100%" width="100%" style="object-fit: cover" autoplay
+              poster="./assets/images/vidd.mp4">
+              <source src="./assets/images/vidd.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div draggable="true" class="OutgoingVideo">
+            <video id="localVideo" muted height="100%" width="100%" style="object-fit: cover" autoplay
+              poster="./assets/images/vidd.mp4">
+              <source src="./assets/images/vidd.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+        <ng-container [ngTemplateOutlet]="selectedTemplate"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noCall>
+  <div style="height: 100%;" class="listingContainer">
+    <div class="emptyListContainer">
+      <div class="emptyListTop">
+        <div></div>
+        <img src="./assets/images/shipping.png" class="shippingIcon" />
+        <div class="noConvoTextWrapper">
+          <p class="noConvoText">No Conversation Yet</p>
+          <p style="max-width: 200px;" class="noConvoSub">
+            Tap and hold on any message to star it, so you can easily find
+            it later.
+          </p>
+        </div>
+      </div>
+      <div class="emptyListBottom">
+        <button type="submit" class="btn refreshButton" (click)="getUsers()">
+          REFRESH
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #incommingAudioCall>
+  <p class="callContainerStatus">Incoming Call</p>
+  <p class="callerName">{{ calling['callerName'] }}</p>
+  <audio id="Incomingaudio" autoplay src="./assets/images/calling_you.mp3" preload="auto"></audio>
+  <img src="./assets/images/audio.png" class="audioIcon" />
+  <div style="width: 150px" class="callButtonsContainer">
+    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+    <img src="./assets/images/Accept-button.png" class="responseButtonImg" (click)="acceptcall()" />
+  </div>
+</ng-template>
+
+<ng-template #outgoingAudioCall>
+  <p class="callContainerStatus">aCalling</p>
+  <p class="callerName">{{ calling['callerName'] }}</p>
+  <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
+  <div style="width:80px" class="callButtonsContainer w-25">
+    <!-- <img src="./assets/images/video-call-off.png" class="responseButtonImg" /> -->
+    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+    <img src="./assets/images/microphone-{{ settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
+      class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+  </div>
+</ng-template>
+
+<ng-template #AudioCallInProgress>
+  <p class="settingsIcon callContainerStatus white m-3">{{ callTime | formatTime }}</p>
+  <p class="callerName">{{ calling['callerName'] }}</p>
+  <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
+  <div style="width: 100px" class="callButtonsContainer w-25">
+    <!-- <img src="./assets/images/video-call-off.png" class="responseButtonImg" /> -->
+    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+    <img src="./assets/images/microphone-{{ settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
+      class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+  </div>
+</ng-template>
+
+<ng-template #incommingVideoCall>
+  <!-- <ng-container *ngTemplateOutlet="VideoCallcallContainer"></ng-container> -->
+  <audio id="audiotag1" autoplay src="./assets/images/calling_you.mp3" preload="auto"></audio>
+  <p class="callContainerStatus">Incoming Call</p>
+  <p class="callerName">{{ calling['callerName'] }}</p>
+  <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
+  <div style="width:140px" class="callButtonsContainer">
+    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+    <img src="./assets/images/Accept-button.png" class="responseButtonImg" (click)="acceptcall()" />
+  </div>
+</ng-template>
+
+<ng-template #outgoingVideoCall>
+  <p class="callContainerStatus">Calling </p>
+  <p class="callerName">{{ calling['callerName'] }}</p>
+  <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
+  <div style="width: 200px" class="callButtonsContainer">
+    <img src="./assets/images/video-call-{{settings.isOnCamara ? 'on.png' :'off.png'}}" class="responseButtonImg"
+      (click)="changeSettings('isOnCamara')" />
+    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+    <img src="./assets/images/microphone-{{settings.isOnMicrophone ? 'on.png' :'off.png'}}" class="responseButtonImg"
+      (click)="changeSettings('isOnMicrophone')" />
+  </div>
+</ng-template>
+
+<ng-template #VideoCallInProgress>
+  <p class="settingsIcon callContainerStatus white m-3">{{ callTime | formatTime }}</p>
+  <p class="callerName white" id="callerHolder">{{ calling['callerName'] }}</p>
+  <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
+  <div style="width: 200px" class="callButtonsContainer">
+    <img src="./assets/images/video-call-{{ settings.isOnInProgressCamara ? 'on.png' :'off.png'}}"
+      class="responseButtonImg" (click)="changeSettings('isOnInProgressCamara')" />
+    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+    <img src="./assets/images/microphone-{{ settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
+      class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+  </div>
+</ng-template>
