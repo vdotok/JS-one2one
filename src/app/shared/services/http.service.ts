@@ -29,11 +29,7 @@ export class HttpService implements HttpInterceptor {
                                 StorageService.clearLocalStorge();
                                 this.showErrorMsg(serRes.message);
                                 this.router.navigate(['/login']);
-                            } else if (serRes.code === 407) {
-                                // StorageService.clearLocalStorge();
-                                this.showErrorMsg(serRes.message);
-                                // this.router.navigate(['/auth/login']);
-                            } else if (serRes.code === 200 || serRes.code === 201) {
+                            }  else if (serRes.code === 200 || serRes.code === 201) {
                             } else {
                                 this.showErrorMsg(serRes.message);
                             }

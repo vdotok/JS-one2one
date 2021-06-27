@@ -1,11 +1,10 @@
-import { Injectable, OnDestroy, Output } from '@angular/core';
+import { Injectable, Output } from '@angular/core';
 import { StorageService } from './storage.service';
 declare const CVDOTOK: any;
 
 @Injectable()
 export class PubsubService {
-  @Output()
-  public Client: any;
+  @Output() public Client: any;
 
   constructor() {
   }
@@ -31,7 +30,7 @@ export class PubsubService {
   Call(params): void {
     this.Client.Call(params);
   }
-  
+
   audioCall(params): void {
     this.Client.AudioCall(params);
   }

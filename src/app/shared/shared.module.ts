@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { WebsocketService } from './services/websocket.service';
 import { StorageService } from './services/storage.service';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth-guard.service';
@@ -35,7 +34,6 @@ const components = [
     AuthGuard,
     BaseService,
     PubsubService,
-    WebsocketService,
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
     { provide: HTTP_INTERCEPTORS, useClass: HttpService, multi: true },
   ],
