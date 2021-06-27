@@ -24,13 +24,7 @@ export class HttpService implements HttpInterceptor {
                     if (event instanceof HttpResponse) {
                         if (event && event.body) {
                             const serRes = event.body;
-                            this.svc.isLoading.next(false);
-                            if (serRes.code === 401) {
-                                StorageService.clearLocalStorge();
-                                this.showErrorMsg(serRes.message);
-                                this.router.navigate(['/login']);
-                            }  else if (serRes.code === 200 || serRes.code === 201) {
-                            } else {
+                            if (serRes.code != 200) {
                                 this.showErrorMsg(serRes.message);
                             }
                         }
@@ -38,7 +32,6 @@ export class HttpService implements HttpInterceptor {
                     }
                 }),
                 catchError(errorRes => {
-                    this.svc.isLoading.next(false);
                     console.log('this should print your error!', errorRes.error);
                     if (errorRes instanceof HttpErrorResponse) {
                         if (errorRes.status === 500) {

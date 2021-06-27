@@ -56,14 +56,13 @@
     <div class="messagesBox">
       <div class="callContainer" [ngClass]="calling.templateName == 'noCall' ? '' :'oncall' ">
         <div>
-          <div class="IncommingVideo border" [hidden]="isShowRemoteVideo()">
-            <video id="remoteVideo" muted height="100%" width="100%" style="object-fit: cover" autoplay
-              poster="./assets/images/vidd.mp4">
+          <div class="IncommingVideo border VideoCallBlock" [hidden]="isShowRemoteVideo()">
+            <video id="remoteVideo" muted style="object-fit: cover" autoplay poster="./assets/images/vidd.mp4">
               <source src="./assets/images/vidd.mp4" type="video/mp4" />
             </video>
           </div>
-          <div id="OutgoingVideo" class="OutgoingVideo" [hidden]="isHideLocalVideo()">
-            <video draggable="true" id="localVideo" muted height="100%" width="100%" style="object-fit: cover" autoplay
+          <div id="OutgoingVideo" class="OutgoingVideo VideoCallBlock" [hidden]="isHideLocalVideo()">
+            <video class="w-100" draggable="true" id="localVideo" muted style="object-fit: cover" autoplay
               poster="./assets/images/vidd.mp4">
               <source src="./assets/images/vidd.mp4" type="video/mp4" />
             </video>
