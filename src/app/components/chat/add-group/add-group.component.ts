@@ -19,18 +19,19 @@ import { fromEvent, of } from 'rxjs';
   styleUrls: ['./add-group.component.scss']
 })
 export class AddGroupComponent implements OnInit {
+  @Output() changeEvent = new EventEmitter<string>();
+  @ViewChild('searchInput') searchInput: ElementRef;
   currentUserName = StorageService.getAuthUsername();
   currentUserData = StorageService.getUserData();
-  @Output() changeEvent = new EventEmitter<string>();
   form: FormGroup;
   loading = true;
   AllUsers = [];
+  CopyAllUsers = [];
   group_title = '';
   groupnameError = '';
-  dialogRef;
+  dialogRef: any;
   selectedUsers = [];
-  @ViewChild('searchInput') searchInput: ElementRef;
-  CopyAllUsers = [];
+
   constructor(
     public pubsubService: PubsubService,
     private svc: BaseService,
@@ -130,9 +131,9 @@ export class AddGroupComponent implements OnInit {
     if (this.selectedUsers.length == 1) {
       const useridArray = this.selectedUsers.map(user => user.user_id);
       let data = {
-        "participants": useridArray,
-        "auto_created": useridArray.length > 1 ? 0 : 1,
-        "group_title": 'personal chat',
+        participants: useridArray,
+        auto_created: useridArray.length > 1 ? 0 : 1,
+        group_title: 'personal chat',
         ...this.form.value,
       }
       this.svc.post('CreateGroup', data).subscribe(v => {
@@ -165,8 +166,8 @@ export class AddGroupComponent implements OnInit {
     this.loading = true;
     this.changeDetector.detectChanges();
     let data = {
-      "participants": useridArray,
-      "auto_created": useridArray.length > 1 ? 0 : 1,
+      participants: useridArray,
+      auto_created: useridArray.length > 1 ? 0 : 1,
       ...this.form.value
     }
     this.svc.post('CreateGroup', data).subscribe(v => {

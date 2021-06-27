@@ -21,31 +21,6 @@ import { fromEvent, of } from 'rxjs';
 })
 export class ChatComponent implements OnInit {
   @ViewChild('searchInput') searchInput: ElementRef;
-  loading = true;
-  AllUsers = [];
-  CopyAllUsers = [];
-  activeChat: any = {
-    chatHistory: []
-  };
-  currentUserName = StorageService.getAuthUsername();
-  currentUserData = StorageService.getUserData();
-  threadType = 'THREAD';
-  screen = 'CHAT';
-  isActiveThread = false;
-  calling = {
-    call_type: 'video',
-    templateName: 'noCall',
-    callerName: ''
-  }
-  countDownTime: Subscription;
-  callTime = 0;
-  settings = {
-    isOnCamara: true,
-    isOnMicrophone: true,
-    isOnInProgressCamara: true,
-    isOnInProgressMicrophone: true
-  }
-
   @ViewChild('noCall') noCall: TemplateRef<any>;
   @ViewChild('incommingAudioCall') incommingAudioCall: TemplateRef<any>;
   @ViewChild('outgoingAudioCall') outgoingAudioCall: TemplateRef<any>;
@@ -53,6 +28,23 @@ export class ChatComponent implements OnInit {
   @ViewChild('incommingVideoCall') incommingVideoCall: TemplateRef<any>;
   @ViewChild('outgoingVideoCall') outgoingVideoCall: TemplateRef<any>;
   @ViewChild('VideoCallInProgress') VideoCallInProgress: TemplateRef<any>;
+  currentUserName = StorageService.getAuthUsername();
+  currentUserData = StorageService.getUserData();
+  loading = true;
+  AllUsers = [];
+  CopyAllUsers = [];
+  screen = 'CHAT';
+  countDownTime: Subscription;
+  callTime = 0;
+  calling = {
+    call_type: 'video',
+    templateName: 'noCall',
+    callerName: ''
+  }
+  settings = {
+    isOnInProgressCamara: true,
+    isOnInProgressMicrophone: true
+  }
 
   get selectedTemplate() {
     const templateList = {
@@ -64,7 +56,7 @@ export class ChatComponent implements OnInit {
       outgoingVideoCall: this.outgoingVideoCall,
       VideoCallInProgress: this.VideoCallInProgress
     }
-    return templateList[this.calling['templateName']];
+    return templateList[this.calling.templateName];
   }
 
   constructor(
@@ -79,6 +71,10 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.pubsubService.Client.on("register", response => {
+      console.error("register response", response);
+    });
+
     this.pubsubService.Client.on("connected", response => {
       console.error("connected response", response);
     });
@@ -87,8 +83,8 @@ export class ChatComponent implements OnInit {
       console.error("call response", response);
       switch (response.type) {
         case "CALL_RECEIVED":
-          const thread = this.findChatThread(response.from)
-          this.calling['callerName'] = thread['full_name'];
+          const full_name = this.findUserName(response.from);
+          this.calling.callerName = full_name;
           this.calling.templateName = response.call_type == 'video' ? 'incommingVideoCall' : 'incommingAudioCall';
           this.calling.call_type = response.call_type;
           this.changeDetector.detectChanges();
@@ -118,10 +114,6 @@ export class ChatComponent implements OnInit {
           document.getElementById('callerHolder').style.display = callerHolderstyle;
           break;
       }
-    });
-
-    this.pubsubService.Client.on("register", response => {
-      console.error("register response", response);
     });
   }
 
@@ -198,8 +190,9 @@ export class ChatComponent implements OnInit {
     })
   }
 
-  findChatThread(ref_id) {
-    return FindArrayObject(this.AllUsers, 'ref_id', ref_id);
+  findUserName(ref_id: string): string {
+    const user = FindArrayObject(this.AllUsers, 'ref_id', ref_id);
+    return user ? user.full_name : '';
   }
 
   logout() {
@@ -216,8 +209,6 @@ export class ChatComponent implements OnInit {
 
   resetCall() {
     this.settings = {
-      isOnCamara: false,
-      isOnMicrophone: false,
       isOnInProgressCamara: true,
       isOnInProgressMicrophone: true
     }
@@ -242,8 +233,8 @@ export class ChatComponent implements OnInit {
     console.error("stopCall");
   }
 
-  inCall() {
-    return this.calling.templateName != 'noCall'
+  inCall(): boolean {
+    return this.calling.templateName != 'noCall';
   }
 
   startVideoCall(user) {
@@ -257,7 +248,6 @@ export class ChatComponent implements OnInit {
       remoteVideo: document.getElementById("remoteVideo"),
       to: [user.ref_id],
     }
-    console.log("startVideoCall", params);
     this.pubsubService.Call(params);
   }
 
@@ -280,13 +270,12 @@ export class ChatComponent implements OnInit {
     this.calling.call_type = 'audio';
     this.screen = 'MSG';
     this.calling.templateName = 'outgoingAudioCall';
-    this.calling['callerName'] = user['full_name'];
+    this.calling.callerName = user.full_name;
     const params = {
       localVideo: document.getElementById("localVideo"),
       remoteVideo: document.getElementById("remoteVideo"),
       to: [user.ref_id],
     }
-    console.log("startVideoCall", params);
     this.pubsubService.audioCall(params);
   }
 
@@ -295,6 +284,8 @@ export class ChatComponent implements OnInit {
     switch (filed) {
       case 'isOnInProgressCamara':
         this.settings[filed] ? this.pubsubService.setCameraOn() : this.pubsubService.setCameraOff();
+        const displaystyle = this.settings[filed] ? 'block' : 'none';
+        document.getElementById('OutgoingVideo').style.display = displaystyle;
         break;
       case 'isOnInProgressMicrophone':
         this.settings[filed] ? this.pubsubService.setMicUnmute() : this.pubsubService.setMicMute();
@@ -302,16 +293,21 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  isShowVideo() {
+  isShowRemoteVideo(): boolean {
     return this.calling.templateName != 'VideoCallInProgress' || this.calling.call_type != 'video';
   }
 
-  isHideThread() {
+  isHideThread(): boolean {
     return isMobile() ? this.screen != 'CHAT' : false;
   }
 
-  isHideChatScreen() {
+  isHideChatScreen(): boolean {
     return isMobile() ? this.screen != 'MSG' : false;
+  }
+
+  isHideLocalVideo(): boolean {
+    const ishide = !(this.calling.templateName == 'VideoCallInProgress' || this.calling.templateName == 'outgoingVideoCall');
+    return ishide;
   }
 
 }
