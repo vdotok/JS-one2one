@@ -46,6 +46,7 @@
       <div class="logoutContainer" (click)="logout()">
         <img src="./assets/images/log-out.png" class="logoutLogo" />
         <span class="logoutText">LOG OUT {{currentUserData.full_name}}</span>
+        <span class="ml-1" [ngClass]="sdkconnected ? 'online' :'offline' "></span>
       </div>
     </div>
   </div>

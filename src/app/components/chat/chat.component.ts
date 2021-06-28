@@ -36,6 +36,7 @@ export class ChatComponent implements OnInit {
   screen = 'CHAT';
   countDownTime: Subscription;
   callTime = 0;
+  sdkconnected = false;
   calling = {
     call_type: 'video',
     templateName: 'noCall',
@@ -76,6 +77,7 @@ export class ChatComponent implements OnInit {
     });
 
     this.pubsubService.Client.on("connected", response => {
+      this.sdkconnected = true;
       console.error("connected response", response);
     });
 

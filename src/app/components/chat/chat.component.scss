@@ -7,3 +7,20 @@
   align-items: center;
   justify-content: center;
 }
+
+.online {
+  height: 10px;
+  width: 10px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+
+.offline {
+  height: 10px;
+  width: 10px;
+  background: red;
+  border-radius: 50%;
+  display: inline-block;
+}
