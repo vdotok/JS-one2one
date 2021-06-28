@@ -2,19 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpEvent, HttpResponse, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import { StorageService } from './storage.service';
 import { environment } from '../../../environments/environment';
-import { BaseService } from './base.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class HttpService implements HttpInterceptor {
     private baseUrl = environment.apiBaseUrl;
 
-    constructor(
-        private router: Router,
-        private svc: BaseService
-    ) { }
+    constructor(private toastr: ToastrService) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         req = this.getModifiedReq(req);
@@ -22,23 +18,16 @@ export class HttpService implements HttpInterceptor {
             .pipe(
                 tap(event => {
                     if (event instanceof HttpResponse) {
-                        if (event && event.body) {
+                        if (event && event.body && event.body.status != 200) {
                             const serRes = event.body;
-                            if (serRes.code != 200) {
-                                this.showErrorMsg(serRes.message);
-                            }
+                            this.showErrorMsg(serRes.message);
                         }
-
                     }
                 }),
                 catchError(errorRes => {
                     console.log('this should print your error!', errorRes.error);
                     if (errorRes instanceof HttpErrorResponse) {
-                        if (errorRes.status === 500) {
-                            // this.toastrService.danger('Opps!', "Something went wrong");
-                        } else {
-                            this.showErrorMsg(errorRes.message);
-                        }
+                        this.showErrorMsg(errorRes.message);
                     }
                     return throwError(errorRes);
                 })
@@ -56,9 +45,7 @@ export class HttpService implements HttpInterceptor {
     }
 
     showErrorMsg(errorResponse) {
-        if (typeof errorResponse == 'string') {
-            // this.toastrService.danger('Opps!', errorResponse);
-        }
-
+        const error = typeof errorResponse == 'string' ? errorResponse : 'Something went wrong'
+        this.toastr.error(error, 'Opps111!');
     }
 }

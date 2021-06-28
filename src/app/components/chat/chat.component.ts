@@ -294,7 +294,7 @@ export class ChatComponent implements OnInit {
   }
 
   isShowRemoteVideo(): boolean {
-    return this.calling.templateName != 'VideoCallInProgress' || this.calling.call_type != 'video';
+    return this.calling.templateName != 'VideoCallInProgress' && this.calling.call_type != 'video';
   }
 
   isHideThread(): boolean {

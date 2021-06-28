@@ -4,8 +4,6 @@ import { Router } from "@angular/router";
 import { StorageService } from 'src/app/shared/services/storage.service';
 import FormsHandler from '../../shared/FormsHandler/FormsHandler';
 import { AuthService } from '../../shared/auth/auth.service';
-import { PubsubService } from 'src/app/shared/services/pubsub.service';
-import { ValidationService } from 'src/app/shared/validators';
 
 @Component({
   selector: 'ngx-login',
@@ -21,8 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private _fb: FormBuilder,
-    public auth: AuthService,
-    protected pubsubService: PubsubService
+    public auth: AuthService
   ) { }
 
   ngOnInit() {
@@ -31,7 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
     this.buildForm();
     document.addEventListener("keyup", event => {
-      if (event.code === 'Enter') {
+      if (event.code === 'Enter' && !this.loading) {
         this.onLogin();
       }
     });
@@ -56,7 +53,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         StorageService.setUserData(v);
         StorageService.setAuthToken(v.auth_token);
         StorageService.setAuthUsername(v.ref_id);
-        // this.pubsubService.initConfigure();
         this.router.navigate(['chat']);
         this.loginForm.reset();
       } else {

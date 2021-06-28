@@ -5,7 +5,6 @@ import FormsHandler from '../../shared/FormsHandler/FormsHandler';
 import { AuthService } from '../../shared/auth/auth.service';
 import { ValidationService } from 'src/app/shared/validators';
 import { StorageService } from 'src/app/shared/services/storage.service';
-import { PubsubService } from 'src/app/shared/services/pubsub.service';
 
 @Component({
   selector: 'sign-up',
@@ -21,8 +20,7 @@ export class SignUpComponent implements OnInit {
   constructor(
     private router: Router,
     private _fb: FormBuilder,
-    public auth: AuthService,
-    protected pubsubService: PubsubService
+    public auth: AuthService
   ) { }
 
   ngOnInit() {
@@ -58,7 +56,6 @@ export class SignUpComponent implements OnInit {
         StorageService.setUserData(v);
         StorageService.setAuthToken(v.auth_token);
         StorageService.setAuthUsername(v.ref_id);
-        this.pubsubService.initConfigure();
         this.router.navigate(['chat']);
         this.loginForm.reset();
       } else {
