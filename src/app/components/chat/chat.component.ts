@@ -193,7 +193,7 @@ export class ChatComponent implements OnInit {
   }
 
   findUserName(ref_id: string): string {
-    const user = FindArrayObject(this.AllUsers, 'ref_id', ref_id);
+    const user = FindArrayObject(this.CopyAllUsers, 'ref_id', ref_id);
     return user ? user.full_name : '';
   }
 
