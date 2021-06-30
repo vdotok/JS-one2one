@@ -33,7 +33,7 @@ Follow the link below register your self for chat server and get the project Id
 
 Clone this repo into new project folder (e.g., `my-proj`).
 ```shell
-git clone https://github.com/vdotok/JS-one2one.git  my-proj
+git clone https://github.com/vdotok/JS-one2one.git
 cd my-proj
 
 ```
