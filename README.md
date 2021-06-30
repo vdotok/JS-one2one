@@ -199,10 +199,10 @@ This method is used to send Attachments
 
 ```
     var option = {
-    from:"",
-    topic:"",
-    key:"",
-    type:""
+      from:"",
+      topic:"",
+      key:"",
+      type:""
     };
 
     /*
