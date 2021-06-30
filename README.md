@@ -1,10 +1,10 @@
-# Vdotok QuickStart Source for chat messaging Demo
+# Vdotok QuickStart Source for One to one Call Demo
 This is a demo project to demonstrate using chat  with Angular 9+.
 
 ## Live Demo
  Fellow the link below to visit the live demo
  
-  <a href="https://chat.vdotok.com" target="_blank" title="Chat Demo">Live Demo</a> 
+  <a href="https://one2one.vdotok.com" target="_blank" title="Chat Demo">Live Demo</a> 
   
  
 ## Prerequisites
@@ -83,141 +83,90 @@ user provided config to init SDK
 
 
 ```
-  Client.on("connect", (response) => {
-    //after connecting successfully
-  });
+  Client.on("error", (response) => {
+///these are errors user receives 
+    if (response.type == "Authorization") {
+    // when sdk recieves wrong credentials and authentication would be failed
+    }
 
-  Client.on("disconnect", (response) => {
-      //on disconnecting
-  });
+    if (response.type == "Register") {
+    // when user can not connect to the vidtok server
+    }
 
-  Client.on("subscribed", (response) => {
-      //on subscribing the channel
-  });
+    if (response.type == "PROCESS_ANSWER") {
+    // when system does not generate an answer for call
+    }
 
-  Client.on("messagesent", (response) => {
-      //on sending the message
-  });
+    if (response.type == "CALL_ADDCANDIDATE") {
+    // when system does not generate ice candidates from system/webbrowser
+    }
 
-  Client.on("online", (response) => {
-      //when someone gets online
-  });
+    if (response.type == "CALL_OFFERGENERATING") {
+    // when system/web browser does not send the media to receiver
+    }
 
-  Client.on("offline", (response) => {
-      //on someone gets offline
-  });
+    if (response.type == "CALL_RTCPEER") {
+    // when system webrtc does not work
+    }
 
-  Client.on("message", (response) => {
-      //on receiving a message
-  });
+    if (response.type == "TRYING") {
+    // when server trying to search receiver
+    }
+});
 
-  Client.on("create", (response) => {
-      //on creating a channel
-  });
+
 
 ```
 
 ### SDK Methods
 
-**CreateChannel**
+**Register**
 
-      This method is used to create a channel. It consists of one parameter i.e,
-      name of the channel
-           
-           
-```
-Client.CreateChannel("abc");
-```
-**SubscribeChannel**
-
-This method is used to subscribe a channel. It takes and object which contains two parameters i.e, key and channel name
+Register function will be called after initializing the SDK.
 
 ```
-Client.Subscribe(
-  {
-    "key": "xsesAcDs45sse",
-    "channel": "abc/",
-  }
-);
+Client.Register("vxcse45ssr3","v9posername");
+``
+
+**Call**
+
+Call method will take one parameter in the form of object.	
 
 ```
+Call(params:Object);
+params= {
+  localVideo:"local video element",
+  remoteVideo:"remote video element",
+  to:"receiver/callee name"
+}
 
-**UnSubscribeChannel**
-
-This method is used to unsubscribe a channel. It takes and object which contains two parameters i.e, key and channel name
-
-```
-Client.UnSubscribe(
-  {
-    "key": "xsesAcDs45sse",
-    "channel": "abc/",
-  }
-);
-```
+Client.Call({ localVideo:myVid, remoteVideo:remoteVid, to:toUser });
+``
 
 
-**SendMessage**
-
-
-This method is used to send message of following types:
-
--	Text
-// If someone sends a message
+During the call two functions can be called.
+1.	EndCall
+2.	CancelCall
 
 ```
-Client.SendMessage({
-    "from": "kashif11",
-    "content": "This is a text message",
-    "id": "1611641364417",
-    "size": 0,
-    "key": "AACO5B_L67HeJxw7onqZz1QoYDd2KyJQ",
-    "type": "text",
-    "to": "4130/",
-    "isGroupMsg": false,
-});
+  Client.EndCall();
+  ClientRect.CancelCall();
 ```
 
-**SendReceipt**
+**Receiver side Call methods **
 
-This method is used to send a confirmation message of a message that is received
-
-```
-Client.SendReceipt({ 
-    //This id will be the same as received message id           
-    "messageId": "1611641364415",
-    "from": "kashif11",
-    "key": "AACO5B_L67HeJxw7onqZz1QoYDd2KyJQ",
-    "to": "4130/",
-    "receiptType": 3,
-    "date": "1611639333.028"
-});
-```
-
-**Send Attachment**
-
-This method is used to send Attachments 
+Receiver will receive one of the following function call.
+1.	RejectCall
+2.	AcceptCall
+These function calls depends on the response of the receiver.
 
 ```
-    var option = {
-      from:"",
-      topic:"",
-      key:"",
-      type:""
-    };
-
-    /*
-    <input type="file" id="fileinput" />
-    */
-    var file = document.getElementById("fileinput").value;
-    Client.SendFile(file, option);
-
-    // If someone sends a raw message
-    var rawOptions = {
-    from:"",
-    topic:"",
-    key:""
-    }
-    var rawMessage = "Hi";
-    SendRawMessage(rawMessage, rawOption);
+Client.RejectCall();
+Client.AcceptCall();
 ```
+
+
+
+
+
 
