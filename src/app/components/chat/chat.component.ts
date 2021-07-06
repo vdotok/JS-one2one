@@ -101,7 +101,7 @@ export class ChatComponent implements OnInit {
           break;
         case "CALL_REJECTED":
           this.resetCall();
-          this.toastr.error("Call is Rejected", 'Opps')
+          this.toastr.error("user is busy", 'Opps')
           break;
         case "CALL_ACCEPTED":
           this.changeDetector.detectChanges();
@@ -224,6 +224,7 @@ export class ChatComponent implements OnInit {
     if (this.countDownTime) {
       this.countDownTime.unsubscribe()
     }
+    document.getElementById('OutgoingVideo').style.display = 'block';
     this.changeDetector.detectChanges();
   }
 
@@ -241,6 +242,7 @@ export class ChatComponent implements OnInit {
 
   startVideoCall(user) {
     if (this.inCall()) return;
+    document.getElementById('OutgoingVideo').style.display = 'block';
     this.screen = 'MSG';
     this.calling.templateName = 'outgoingVideoCall';
     this.calling['callerName'] = user['full_name'];
@@ -290,8 +292,6 @@ export class ChatComponent implements OnInit {
         document.getElementById('OutgoingVideo').style.display = displaystyle;
         break;
       case 'isOnInProgressMicrophone':
-        console.error("filed", filed);
-        console.error("this.settings[filed]", this.settings[filed]);
         this.settings[filed] ? this.pubsubService.setMicUnmute() : this.pubsubService.setMicMute();
         const enabled = this.settings[filed];
         const audiotrack: any = (<HTMLInputElement>document.getElementById("localAudio"));
