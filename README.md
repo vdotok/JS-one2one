@@ -48,6 +48,9 @@ Install the npm packages described in the `package.json` and verify that it work
 npm install
 npm run serve
 ```
+Open browser application is running at http://localhost:4200
+
+Create new account using sign up form and use the application
 
 ###  How to generate and install build 
 Follow the commands below to build
