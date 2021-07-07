@@ -15,11 +15,11 @@ import { startWith } from 'rxjs/internal/operators/startWith';
 import { fromEvent, of } from 'rxjs';
 
 @Component({
-  selector: 'chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss']
+  selector: 'call',
+  templateUrl: './call.component.html',
+  styleUrls: ['./call.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class CallComponent implements OnInit {
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild('noCall') noCall: TemplateRef<any>;
   @ViewChild('incommingAudioCall') incommingAudioCall: TemplateRef<any>;
@@ -33,7 +33,7 @@ export class ChatComponent implements OnInit {
   loading = true;
   AllUsers = [];
   CopyAllUsers = [];
-  screen = 'CHAT';
+  screen = 'LISTING';
   countDownTime: Subscription;
   callTime = 0;
   sdkconnected = false;
@@ -90,18 +90,18 @@ export class ChatComponent implements OnInit {
           this.calling.templateName = response.call_type == 'video' ? 'incommingVideoCall' : 'incommingAudioCall';
           this.calling.call_type = response.call_type;
           this.changeDetector.detectChanges();
-          this.screen = 'MSG';
+          this.screen = 'MAIN';
           break;
         case "CALL_ENDED":
           this.resetCall();
           break;
         case "MISSED_CALL":
           this.resetCall();
-          this.toastr.error("Missed Call", 'Opps')
+          this.toastr.error("Opps", 'Missed Call')
           break;
         case "CALL_REJECTED":
           this.resetCall();
-          this.toastr.error("user is busy", 'Opps')
+          this.toastr.error("Opps", 'user is busy')
           break;
         case "CALL_ACCEPTED":
           this.changeDetector.detectChanges();
@@ -112,8 +112,8 @@ export class ChatComponent implements OnInit {
         case "CALL_STATUS":
           const displaystyle = response.video_status ? 'block' : 'none';
           const callerHolderstyle = response.video_status ? 'none' : 'block';
-          document.getElementById('remoteVideo').style.display = displaystyle;
-          document.getElementById('callerHolder').style.display = callerHolderstyle;
+          if (document.getElementById('remoteVideo')) document.getElementById('remoteVideo').style.display = displaystyle;
+          if (document.getElementById('callerHolder')) document.getElementById('callerHolder').style.display = callerHolderstyle;
           break;
       }
     });
@@ -220,7 +220,7 @@ export class ChatComponent implements OnInit {
       callerName: ''
     }
     this.callTime = 0;
-    this.screen = 'CHAT';
+    this.screen = 'LISTING';
     if (this.countDownTime) {
       this.countDownTime.unsubscribe()
     }
@@ -243,7 +243,7 @@ export class ChatComponent implements OnInit {
   startVideoCall(user) {
     if (this.inCall()) return;
     document.getElementById('OutgoingVideo').style.display = 'block';
-    this.screen = 'MSG';
+    this.screen = 'MAIN';
     this.calling.templateName = 'outgoingVideoCall';
     this.calling['callerName'] = user['full_name'];
     this.changeDetector.detectChanges();
@@ -272,7 +272,7 @@ export class ChatComponent implements OnInit {
   startAudioCall(user) {
     if (this.inCall()) return;
     this.calling.call_type = 'audio';
-    this.screen = 'MSG';
+    this.screen = 'MAIN';
     this.calling.templateName = 'outgoingAudioCall';
     this.calling.callerName = user.full_name;
     const params = {
@@ -307,11 +307,11 @@ export class ChatComponent implements OnInit {
   }
 
   isHideThread(): boolean {
-    return isMobile() ? this.screen != 'CHAT' : false;
+    return isMobile() ? this.screen != 'LISTING' : false;
   }
 
   isHideChatScreen(): boolean {
-    return isMobile() ? this.screen != 'MSG' : false;
+    return isMobile() ? this.screen != 'MAIN' : false;
   }
 
   isHideLocalVideo(): boolean {

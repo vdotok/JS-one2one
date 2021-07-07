@@ -6,7 +6,7 @@ import FormsHandler from '../../shared/FormsHandler/FormsHandler';
 import { AuthService } from '../../shared/auth/auth.service';
 
 @Component({
-  selector: 'ngx-login',
+  selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.auth.islogin()) {
-      this.router.navigate(['chat']);
+      this.router.navigate(['call']);
     }
     this.buildForm();
     document.addEventListener("keyup", event => {
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         StorageService.setUserData(v);
         StorageService.setAuthToken(v.auth_token);
         StorageService.setAuthUsername(v.ref_id);
-        this.router.navigate(['chat']);
+        this.router.navigate(['call']);
         this.loginForm.reset();
       } else {
         this.formError = v.message;
