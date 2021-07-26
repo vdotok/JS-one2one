@@ -46,7 +46,7 @@ Install the npm packages described in the `package.json` and verify that it work
 
 ```shell
 npm install
-npm run serve
+ng serve
 ```
 Open browser application is running at http://localhost:4200
 
