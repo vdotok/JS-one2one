@@ -129,7 +129,7 @@ Register function will be called after initializing the SDK.
 
 ```
 Client.Register("vxcse45ssr3","v9posername");
-``
+```
 
 **Call**
 
