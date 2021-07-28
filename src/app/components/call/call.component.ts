@@ -44,7 +44,8 @@ export class CallComponent implements OnInit {
   }
   settings = {
     isOnInProgressCamara: true,
-    isOnInProgressMicrophone: true
+    isOnInProgressMicrophone: true,
+    remoteVideoMicrophone:true
   }
 
   get selectedTemplate() {
@@ -114,6 +115,7 @@ export class CallComponent implements OnInit {
           const callerHolderstyle = response.video_status ? 'none' : 'block';
           if (document.getElementById('remoteVideo')) document.getElementById('remoteVideo').style.display = displaystyle;
           if (document.getElementById('callerHolder')) document.getElementById('callerHolder').style.display = callerHolderstyle;
+          this.settings.remoteVideoMicrophone =  response.audio_status
           break;
       }
     });
@@ -212,7 +214,8 @@ export class CallComponent implements OnInit {
   resetCall() {
     this.settings = {
       isOnInProgressCamara: true,
-      isOnInProgressMicrophone: true
+      isOnInProgressMicrophone: true,
+      remoteVideoMicrophone:true
     }
     this.calling = {
       call_type: 'video',
@@ -224,7 +227,7 @@ export class CallComponent implements OnInit {
     if (this.countDownTime) {
       this.countDownTime.unsubscribe()
     }
-    document.getElementById('OutgoingVideo').style.display = 'block';
+    document.getElementById('localVideo').style.display = 'block';
     this.changeDetector.detectChanges();
   }
 
@@ -242,7 +245,7 @@ export class CallComponent implements OnInit {
 
   startVideoCall(user) {
     if (this.inCall()) return;
-    document.getElementById('OutgoingVideo').style.display = 'block';
+    document.getElementById('localVideo').style.display = 'block';
     this.screen = 'MAIN';
     this.calling.templateName = 'outgoingVideoCall';
     this.calling['callerName'] = user['full_name'];
@@ -289,7 +292,7 @@ export class CallComponent implements OnInit {
       case 'isOnInProgressCamara':
         this.settings[filed] ? this.pubsubService.setCameraOn() : this.pubsubService.setCameraOff();
         const displaystyle = this.settings[filed] ? 'block' : 'none';
-        document.getElementById('OutgoingVideo').style.display = displaystyle;
+        if (document.getElementById('localVideo')) document.getElementById('localVideo').style.display = displaystyle;
         break;
       case 'isOnInProgressMicrophone':
         this.settings[filed] ? this.pubsubService.setMicUnmute() : this.pubsubService.setMicMute();
@@ -302,9 +305,6 @@ export class CallComponent implements OnInit {
     }
   }
 
-  isShowRemoteVideo(): boolean {
-    return this.calling.templateName != 'VideoCallInProgress' && this.calling.call_type != 'video';
-  }
 
   isHideThread(): boolean {
     return isMobile() ? this.screen != 'LISTING' : false;
@@ -314,9 +314,24 @@ export class CallComponent implements OnInit {
     return isMobile() ? this.screen != 'MAIN' : false;
   }
 
+
+  isHideRemoteVideo(): boolean {
+    const ishide = !(this.calling.templateName == 'VideoCallInProgress' && this.calling.call_type == 'video');
+    return ishide;
+  }
+
   isHideLocalVideo(): boolean {
     const ishide = !(this.calling.templateName == 'VideoCallInProgress' || this.calling.templateName == 'outgoingVideoCall');
     return ishide;
+  }
+
+  isMobile() {
+    return window.innerWidth < 768
+  }
+
+  backScreen() {
+    this.screen = "CHAT";
+    this.changeDetector.detectChanges();
   }
 
 }

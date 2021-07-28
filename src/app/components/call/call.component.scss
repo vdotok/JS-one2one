@@ -1,6 +1,6 @@
-#callerHolder {
-  display: none;
-}
+// #callerHolder {
+//   // display: none;
+// }
 
 .VideoCallBlock {
   display: flex;
@@ -23,4 +23,7 @@
   background: red;
   border-radius: 50%;
   display: inline-block;
+}
+.callContainer{
+  padding:0 !important
 }

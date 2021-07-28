@@ -5,7 +5,7 @@
     </div>
     <div class="leftSideListContainer">
       <div style="align-items: center; margin:0px" class="leftSectionHeader">
-        <h4 class="leftHeading">CHATROOMS</h4>
+        <h4 class="leftHeading">CHATROOMS </h4>
       </div>
 
       <div class="listingContainer fullHeight">
@@ -29,7 +29,7 @@
             <div class="contactListCard hand">
               <div class="contactListCardLeft">
                 <img src="./assets/images/user.png" class="ListCardIcon" />
-                <p class="ListCardName">{{user.full_name}}</p>
+                <p class="ListCardName">{{ user.full_name }}</p>
               </div>
               <div class="contactListCardRight mr-3">
                 <div></div>
@@ -45,29 +45,67 @@
     <div class="leftSideFooter">
       <div class="logoutContainer" (click)="logout()">
         <img src="./assets/images/log-out.png" class="logoutLogo" />
-        <span class="logoutText">LOG OUT {{currentUserData.full_name}}</span>
+        <span class="logoutText">LOG OUT {{ currentUserData.full_name }} </span>
         <span class="ml-1" [ngClass]="sdkconnected ? 'online' :'offline' "></span>
       </div>
     </div>
   </div>
   <div class="col-sm-8 rightSide" [hidden]="isHideChatScreen()">
-    <div class="rightSideHeader">
-      <!-- call buttons end -->
+    <div class="rightSideHeader alignBottom chatholder">
+      <div style="display: flex;flex-direction: row;align-items: center">
+        <img src="./assets/images/arrow-left.png" class="arrowLeft hand" (click)="backScreen()" *ngIf="isMobile()" />
+        <div style="display: flex;align-items: center;">
+          <p class="roomNameText text-capitalize" *ngIf="calling.callerName">{{calling.callerName}}
+          </p>
+          <p class="text-capitalize" style="margin-left: 25px;font-family: inter-regular;font-size: 21px;"
+            *ngIf="callTime">{{ callTime | formatTime }}
+          </p>
+        </div>
+      </div>
     </div>
-    <div class="messagesBox">
-      <div class="callContainer" [ngClass]="calling.templateName == 'noCall' ? '' :'oncall' ">
-        <div>
-          <div class="IncommingVideo border VideoCallBlock" [hidden]="isShowRemoteVideo()">
-            <video id="remoteVideo" muted style="object-fit: fill" autoplay poster="./assets/images/vidd.mp4">
-              <source src="" type="video/mp4" />
-            </video>
-          </div>
-          <div id="OutgoingVideo" class="OutgoingVideo VideoCallBlock" [hidden]="isHideLocalVideo()">
-            <video class="w-100" draggable="true" id="localVideo" muted style="object-fit: fill" autoplay>
-              <source src="" type="video/mp4" />
-            </video>
+
+    <div style="overflow: hidden;padding: 0px;" class="messagesBox">
+      <!-- [ngClass]="calling.templateName == 'noCall' ? '' :'oncall' " -->
+      <div
+        [ngClass]="calling.templateName == 'VideoCallInProgress' || calling.templateName == 'outgoingVideoCall' ? 'callContainer2 oncall' :'callContainer' ">
+        <div [ngClass]="isHideRemoteVideo() ? 'singleVideoAlone' :'singleVideo' " [hidden]="isHideLocalVideo()">
+          <video id="localVideo" autoplay muted height="100%" width="100%"
+            style="object-fit: fill; position: absolute; z-index: 10001" autoplay>
+            <source src="" type="video/mp4" />
+          </video>
+          <p class="bigName">{{ currentUserData.full_name }}</p>
+          <div class="newdetailsWrapper">
+            <span class="nameContainer" style="color: #f2e33a; margin-right: 0px">Me</span>
+            <span class="nameContainer">
+              <img src="./assets/images/microphone-{{settings.isOnInProgressMicrophone ? 'on.png' :'red.png'}}" style="
+                height: 22px;
+                width: 22px;
+                object-fit: contain;
+                margin-right: 5px;
+              " />
+              {{ currentUserData.full_name }}</span>
           </div>
         </div>
+
+        <div class="singleVideo" [hidden]="isHideRemoteVideo()">
+          <video id="remoteVideo" autoplay muted height="100%" width="100%"
+            style="object-fit: fill; position: absolute; z-index: 10001" autoplay>
+            <source src="" type="video/mp4" />
+          </video>
+          <p class="bigName">{{ calling['callerName'] }}</p>
+          <div class="newdetailsWrapper">
+            <span class="nameContainer">
+              <!-- <img src="./assets/images/microphone-{{settings.remoteVideoMicrophone ? 'on.png' :'red.png'}}" style="
+                height: 22px;
+                width: 22px;
+                object-fit: contain;
+                margin-right: 5px;
+              " /> -->
+              {{ calling['callerName'] }}
+            </span>
+          </div>
+        </div>
+
         <ng-container [ngTemplateOutlet]="selectedTemplate"></ng-container>
       </div>
     </div>
@@ -98,53 +136,65 @@
 </ng-template>
 
 <ng-template #incommingAudioCall>
-  <p class="callContainerStatus">Incoming Call</p>
-  <p class="callerName text-capitalize">{{ calling['callerName'] }}</p>
-  <audio id="Incomingaudio" autoplay src="./assets/images/calling_you.mp3" preload="auto"></audio>
-  <img src="./assets/images/audio.png" class="audioIcon" />
-  <div style="width: 150px" class="callButtonsContainer">
-    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
-    <img src="./assets/images/Accept-button.png" class="responseButtonImg" (click)="acceptcall()" />
+  <div
+    style="height:100%;background-color: #1E2F2C;width: 100%;display: flex;flex-direction: column;align-items: center;justify-content: space-between;padding-top: 60px;padding-bottom: 30px;">
+    <p style="color:white" class="callContainerStatus">Incoming Call</p>
+    <p style="color:white" class="callerName text-capitalize">{{ calling['callerName'] }}</p>
+    <audio id="Incomingaudio" autoplay src="./assets/images/calling_you.mp3" preload="auto"></audio>
+    <img src="./assets/images/audio2.png" class="audioIcon" />
+    <div style="width: 150px" class="callButtonsContainer">
+      <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+      <img src="./assets/images/Accept-button.png" class="responseButtonImg" (click)="acceptcall()" />
+    </div>
   </div>
 </ng-template>
 
 <ng-template #outgoingAudioCall>
-  <p class="callContainerStatus">Calling</p>
-  <p class="callerName text-capitalize">{{ calling['callerName'] }}</p>
-  <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
-  <div style="width: 150px" class="callButtonsContainer">
-    <!-- <img src="./assets/images/video-call-off.png" class="responseButtonImg" /> -->
-    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
-    <img src="./assets/images/microphone-{{ settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
-      class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+  <div
+    style="height:100%;background-color: #1E2F2C;width: 100%;display: flex;flex-direction: column;align-items: center;justify-content: space-between;padding-top: 60px;padding-bottom: 30px;">
+    <p style="color:white" class="callContainerStatus">Calling</p>
+    <p style="color:white" class="callerName text-capitalize">{{ calling['callerName'] }}</p>
+    <img src="./assets/images/audio2.png" class="audioIcon" />
+    <div style="width: 150px" class="callButtonsContainer">
+      <!-- <img src="./assets/images/video-call-off.png" class="responseButtonImg" /> -->
+      <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+      <img src="./assets/images/microphone-{{ settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
+        class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+    </div>
   </div>
 </ng-template>
 
 <ng-template #AudioCallInProgress>
-  <p class="settingsIcon callContainerStatus white m-3">{{ callTime | formatTime }}</p>
-  <p class="callerName text-capitalize">{{ calling['callerName'] }}</p>
-  <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
-  <div style="width: 150px" class="callButtonsContainer">
-    <!-- <img src="./assets/images/video-call-off.png" class="responseButtonImg" /> -->
-    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
-    <img src="./assets/images/microphone-{{ settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
-      class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+  <div
+    style="height:100%;width: 100%;display: flex;flex-direction: column;align-items: center;justify-content: space-between;padding-top: 60px;padding-bottom: 30px;">
+    <p class="settingsIcon callContainerStatus white m-3">{{ callTime | formatTime }}</p>
+    <p class="callerName text-capitalize">{{ calling['callerName'] }}</p>
+    <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
+    <div style="width: 150px" class="callButtonsContainer">
+      <!-- <img src="./assets/images/video-call-off.png" class="responseButtonImg" /> -->
+      <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+      <img src="./assets/images/microphone-{{ settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
+        class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+    </div>
   </div>
 </ng-template>
 
 <ng-template #incommingVideoCall>
-  <audio id="audiotag1" autoplay src="./assets/images/calling_you.mp3" preload="auto"></audio>
-  <p class="callContainerStatus">Incoming Call</p>
-  <p class="callerName text-capitalize">{{ calling['callerName'] }}</p>
-  <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
-  <div style="width:140px" class="callButtonsContainer">
-    <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
-    <img src="./assets/images/Accept-button.png" class="responseButtonImg" (click)="acceptcall()" />
+  <div
+    style="height:100%;background-color: #1E2F2C;width: 100%;display: flex;flex-direction: column;align-items: center;justify-content: space-between;padding-top: 60px;padding-bottom: 30px;">
+    <audio id="audiotag1" autoplay src="./assets/images/calling_you.mp3" preload="auto"></audio>
+    <p style="color:white" class="callContainerStatus">Incoming Call</p>
+    <p style="color:white" class="callerName text-capitalize">{{ calling['callerName'] }}</p>
+    <img src="./assets/images/audio2.png" class="audioIcon" />
+    <div style="width:140px" class="callButtonsContainer">
+      <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+      <img src="./assets/images/Accept-button.png" class="responseButtonImg" (click)="acceptcall()" />
+    </div>
   </div>
 </ng-template>
 
 <ng-template #outgoingVideoCall>
-  <p class="callContainerStatus">Calling </p>
+  <!-- <p class="callContainerStatus">Calling </p>
   <p class="callerName text-capitalize">{{ calling['callerName'] }}</p>
   <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
   <div style="width: 200px" class="callButtonsContainer">
@@ -153,11 +203,20 @@
     <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
     <img src="./assets/images/microphone-{{settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
       class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+  </div> -->
+  <!-- </div> -->
+  <div style="width: 100%; justify-content: center" class="callButtonsContainer2">
+    <img src="./assets/images/video-call-{{settings.isOnInProgressCamara ? 'on.png' :'off.png'}}"
+      class="responseButtonImg" (click)="changeSettings('isOnInProgressCamara')" />
+    <img style="margin-left: 20px; margin-right: 20px" src="./assets/images/decline-button.png"
+      class="responseButtonImg" (click)="stopCall()" />
+    <img src="./assets/images/microphone-{{settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
+      class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
   </div>
 </ng-template>
 
 <ng-template #VideoCallInProgress>
-  <p class="settingsIcon callContainerStatus white m-3">{{ callTime | formatTime }}</p>
+  <!-- <p class="settingsIcon callContainerStatus white m-3">{{ callTime | formatTime }}</p>
   <p class="callerName text-capitalize" id="callerHolder">{{ calling['callerName'] }}</p>
   <img src="./assets/images/blue-avatar.png" class="avatarIcon" />
   <div style="width: 200px" class="callButtonsContainer">
@@ -165,6 +224,15 @@
       class="responseButtonImg" (click)="changeSettings('isOnInProgressCamara')" />
     <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
     <img src="./assets/images/microphone-{{ settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
+      class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
+  </div> -->
+  <!-- </div> -->
+  <div style="width: 100%; justify-content: center" class="callButtonsContainer2">
+    <img src="./assets/images/video-call-{{settings.isOnInProgressCamara ? 'on.png' :'off.png'}}"
+      class="responseButtonImg" (click)="changeSettings('isOnInProgressCamara')" />
+    <img style="margin-left: 20px; margin-right: 20px" src="./assets/images/decline-button.png"
+      class="responseButtonImg" (click)="stopCall()" />
+    <img src="./assets/images/microphone-{{settings.isOnInProgressMicrophone ? 'on.png' :'off.png'}}"
       class="responseButtonImg" (click)="changeSettings('isOnInProgressMicrophone')" />
   </div>
 </ng-template>
