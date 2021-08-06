@@ -24,11 +24,36 @@ We recommend [nvm](https://github.com/creationix/nvm) for managing multiple vers
 
 ## Project Signup and Project ID
 
-
-y	
 Follow the link below register your self for chat server and get the project Id
 	https://www.kuchtohoga.com/norgic/chatSDK/
   
+## Setting up the local environment
+
+To install Angular on your local system, you need the following:
+
+
+**Node.js**
+
+Angular requires an active LTS or maintenance LTS version of Node.js.
+For more information on installing Node.js, see <a href="https://nodejs.org">nodejs.org</a>. If you are unsure what version of Node.js runs on your system, run node -v in a terminal window.
+
+**npm package manager**
+
+Angular, the Angular CLI, and Angular applications depend <a href="https://docs.npmjs.com/getting-started/what-is-npm"> npm packages </a> on npm packages for many features and functions. To download and install npm packages, you need an npm package manager. This guide uses the npm client command line interface, which is installed with Node.js by default. To check that you have the npm client installed, run npm -v in a terminal window.
+
+
+**Install the Angular CLI**
+
+You use the Angular CLI to create projects, generate application and library code, and perform a variety of ongoing development tasks such as testing, bundling, and deployment.
+
+To install the Angular CLI, open a terminal window and run the following command:
+
+```
+npm install -g @angular/cli
+```
+
+For more information <a href="https://angular.io/guide/setup-local"> Angular Setup</a>
+
 ## How to run it locally
 
 Clone this repo into new project folder (e.g., `my-proj`).
