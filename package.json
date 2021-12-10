@@ -49,5 +49,17 @@
     "ts-node": "~8.3.0",
     "tslint": "~5.18.0",
     "typescript": "~4.2.4"
-  }
+  },
+  "description": "This is a demo project to demonstrate using chat  with Angular 9+.",
+  "main": "karma.conf.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vdotok/JS-one2one.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vdotok/JS-one2one/issues"
+  },
+  "homepage": "https://github.com/vdotok/JS-one2one#readme"
 }
