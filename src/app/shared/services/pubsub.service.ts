@@ -12,7 +12,7 @@ export class PubsubService {
   public initConfigure(): void {
     const user = StorageService.getUserData();
     this.Client = new CVDOTOK.Client({
-      projectID: "170JRJUI",
+      projectID: "176GK5IN",
       // secret: "3d9686b635b15b5bc2d19800407609fa",
       host: `${user.media_server_map.protocol}://${user.media_server_map.host}:${user.media_server_map.port}/${user.media_server_map.end_point}`
     });
