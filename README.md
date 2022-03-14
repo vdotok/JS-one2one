@@ -21,7 +21,13 @@ We recommend <a href="https://github.com/nvm-sh/nvm" target="_blank">nvm </a> fo
 Register at <a href="https://userpanel.vdotok.com/norgic/chatSDK" target="_blank">VdoTok</a> to get Authentication Token and Project ID.
 
 - After successful registration, you can update the existing projectID with your own projectID, Which you will recieve in the response of register request. 
-- For One to One call in the application, You can update the projectID following these steps. ( JS-CHAT -> src -> app -> shared -> services -> pubsub.service.ts ).
+- For One to One call in the application, You can update the projectID by following these steps. ( JS-CHAT -> src -> app -> shared -> services -> pubsub.service.ts ).
+
+You have to Update Project_id at the Login and Signup request by following these steps.
+- At Login request. ( JS-WEBAPP -> src -> app -> components -> login -> login.component.ts )
+- At Signup request. ( JS-WEBAPP -> src -> app -> components -> sign-up -> sign-up.component.ts )
+
+After replacing the projectID at all the above places, compile and run the project.
 
 ## Setting up the local environment
 
