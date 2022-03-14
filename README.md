@@ -20,6 +20,9 @@ We recommend <a href="https://github.com/nvm-sh/nvm" target="_blank">nvm </a> fo
 
 Register at <a href="https://userpanel.vdotok.com/norgic/chatSDK" target="_blank">VdoTok</a> to get Authentication Token and Project ID.
 
+- After successful registration, you can update the existing projectID with your own projectID, Which you will recieve in the response of register request. 
+- For One to One call in the application, You can update the projectID following these steps. ( JS-CHAT -> src -> app -> shared -> services -> pubsub.service.ts ).
+
 ## Setting up the local environment
 
 To install Angular on your local system, you need the following:
@@ -32,13 +35,15 @@ Angular requires an active LTS or maintenance LTS version of Node.js. For more i
 
 Angular, the Angular CLI, and Angular applications depend npm packages on <a href="https://docs.npmjs.com/getting-started/what-is-npm">npm packages</a> for many features and functions. To download and install npm packages, you need an npm Package Manager. This guide uses the npm client command line interface, which is installed with Node.js by default. To check that you have the npm client installed, run `npm -v` in a terminal window.
 
-### Install the Angular CLI
 
+###  Install the Angular CLI 
 You can use the Angular CLI to create projects, generate application and library code, and perform a variety of ongoing development tasks such as testing, bundling, and deployment.
-
-To install the Angular CLI, open a terminal window and run the following command:
-
-Visit <a href="https://angular.io/guide/setup-local">Angular Setup</a> for more information.
+> To install the Angular CLI, open a terminal window (ctrl + shift + c) and run the following command:
+ 
+```shell
+   npm install –g @angular/cli 
+```
+Visit <a href="https://angular.io/guide/setup-local" target="_blank">Angular Setup</a> for more information.
 
 ## How to run it locally
 
@@ -88,3 +93,11 @@ const Client = new MVDOTOK.Client({
       this.Client.Register(user.ref_id.toString(), user.authorization_token.toString());
     });
 ```
+
+After Successful configuation, you can run the projcet locally by using this command.
+
+```shell
+    npm start or
+    ng serve
+```
+Now open the browser and you can see the application at http://localhost:4200 
