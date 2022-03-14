@@ -31,7 +31,7 @@ After replacing the projectID at all the above places, compile and run the proje
 
 ### Base URL
 
-You have to update BaseUrl with projectID. You can update **apiBaseUrl** by following these steps.
+You have to update BaseUrl with your own apiBaseUrl. You can update **apiBaseUrl** by following these steps.
 - In environment.prod.ts File, (JS-ONE2ONE -> src -> environments -> environment.prod.ts)
 - In environment.ts File, (JS-ONE2ONE -> src -> environments -> environment.ts)
 
