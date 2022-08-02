@@ -9,5 +9,5 @@ RewriteRule ^(.*) /index.html [NC,L]
 #Protect Directory
 AuthName "VDOTOK"
 AuthType Basic
-AuthUserFile /home/asad/.htpasswd
+AuthUserFile /opt/vdotokpass/.htpasswd
 Require valid-user
