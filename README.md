@@ -63,6 +63,20 @@ Visit <a href="https://angular.io/guide/setup-local" target="_blank">Angular Set
     cd my-proj
 ```
 
+Register at <a href="https://userpanel.vdotok.com/overview" target="_blank">VdoTok</a> to get **Authentication Token** and **Project ID**.
+
+1. Click on this link -> https://vdotok.com/ in Chrome.
+
+![My Remote Image](https://user-images.githubusercontent.com/87179594/184070841-f9b91f46-93df-4047-acfb-4739fd207aaa.jpg)
+
+2. This will navigate to Sign Up page, where the User is required to enter the following information: First Name > Last Name > Email > Country > Password. Select Sign Up For Free button
+
+![My Remote Image](https://user-images.githubusercontent.com/87179594/184070989-e8b26d85-6e64-4ef3-b6d7-56449738236c.jpg)
+
+3. After successfully sign up User navigates to the main dashboad of VDOTOK. Where user can find the ProjectID and Api Key.
+
+![My Remote Image](https://user-images.githubusercontent.com/87179594/184071060-9909513b-f880-4de8-9481-6ab91ae2be95.jpg)
+
 #### After successful registration, you can update the existing projectID with your own projectID.
 
 <br/>
