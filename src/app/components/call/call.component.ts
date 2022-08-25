@@ -1,52 +1,62 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { FindArrayObject, isMobile } from 'src/app/shared/helpers/helpersFunctions';
-import { BaseService } from 'src/app/shared/services/base.service';
-import { PubsubService } from 'src/app/shared/services/pubsub.service';
-import { StorageService } from 'src/app/shared/services/storage.service';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
+import {
+  FindArrayObject,
+  isMobile,
+} from "src/app/shared/helpers/helpersFunctions";
+import { BaseService } from "src/app/shared/services/base.service";
+import { PubsubService } from "src/app/shared/services/pubsub.service";
+import { StorageService } from "src/app/shared/services/storage.service";
 import { timer, Subscription } from "rxjs";
-import { ToastrService } from 'ngx-toastr';
-import { map } from 'rxjs/internal/operators/map';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
-import { mergeMap } from 'rxjs/internal/operators/mergeMap';
-import { startWith } from 'rxjs/internal/operators/startWith';
-import { fromEvent, of } from 'rxjs';
+import { ToastrService } from "ngx-toastr";
+import { map } from "rxjs/internal/operators/map";
+import { debounceTime } from "rxjs/internal/operators/debounceTime";
+import { distinctUntilChanged } from "rxjs/internal/operators/distinctUntilChanged";
+import { mergeMap } from "rxjs/internal/operators/mergeMap";
+import { startWith } from "rxjs/internal/operators/startWith";
+import { fromEvent, of } from "rxjs";
 
 @Component({
-  selector: 'call',
-  templateUrl: './call.component.html',
-  styleUrls: ['./call.component.scss']
+  selector: "call",
+  templateUrl: "./call.component.html",
+  styleUrls: ["./call.component.scss"],
 })
 export class CallComponent implements OnInit {
-  @ViewChild('searchInput') searchInput: ElementRef;
-  @ViewChild('noCall') noCall: TemplateRef<any>;
-  @ViewChild('incommingAudioCall') incommingAudioCall: TemplateRef<any>;
-  @ViewChild('outgoingAudioCall') outgoingAudioCall: TemplateRef<any>;
-  @ViewChild('AudioCallInProgress') AudioCallInProgress: TemplateRef<any>;
-  @ViewChild('incommingVideoCall') incommingVideoCall: TemplateRef<any>;
-  @ViewChild('outgoingVideoCall') outgoingVideoCall: TemplateRef<any>;
-  @ViewChild('VideoCallInProgress') VideoCallInProgress: TemplateRef<any>;
+  @ViewChild("searchInput") searchInput: ElementRef;
+  @ViewChild("noCall") noCall: TemplateRef<any>;
+  @ViewChild("incommingAudioCall") incommingAudioCall: TemplateRef<any>;
+  @ViewChild("outgoingAudioCall") outgoingAudioCall: TemplateRef<any>;
+  @ViewChild("AudioCallInProgress") AudioCallInProgress: TemplateRef<any>;
+  @ViewChild("incommingVideoCall") incommingVideoCall: TemplateRef<any>;
+  @ViewChild("outgoingVideoCall") outgoingVideoCall: TemplateRef<any>;
+  @ViewChild("VideoCallInProgress") VideoCallInProgress: TemplateRef<any>;
   currentUserName = StorageService.getAuthUsername();
   currentUserData = StorageService.getUserData();
   loading = true;
   AllUsers = [];
   CopyAllUsers = [];
-  screen = 'LISTING';
+  screen = "LISTING";
   countDownTime: Subscription;
   callTime = 0;
   sdkconnected = false;
   calling = {
-    call_type: 'video',
-    templateName: 'noCall',
-    callerName: ''
-  }
+    call_type: "video",
+    templateName: "noCall",
+    callerName: "",
+  };
   settings = {
     isOnInProgressCamara: true,
     isOnInProgressMicrophone: true,
-    remoteVideoMicrophone:true
-  }
+    remoteVideoMicrophone: true,
+  };
 
   get selectedTemplate() {
     const templateList = {
@@ -56,8 +66,8 @@ export class CallComponent implements OnInit {
       AudioCallInProgress: this.AudioCallInProgress,
       incommingVideoCall: this.incommingVideoCall,
       outgoingVideoCall: this.outgoingVideoCall,
-      VideoCallInProgress: this.VideoCallInProgress
-    }
+      VideoCallInProgress: this.VideoCallInProgress,
+    };
     return templateList[this.calling.templateName];
   }
 
@@ -67,55 +77,67 @@ export class CallComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private changeDetector: ChangeDetectorRef,
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) {
     this.pubsubService.initConfigure();
   }
 
   ngOnInit() {
-    this.pubsubService.Client.on("register", response => {
+    this.pubsubService.Client.on("register", (response) => {
       console.error("register response", response);
     });
 
-    this.pubsubService.Client.on("connected", response => {
+    this.pubsubService.Client.on("connected", (response) => {
       this.sdkconnected = true;
       console.error("connected response", response);
     });
 
-    this.pubsubService.Client.on("call", response => {
-      console.error("call response", response);
+    this.pubsubService.Client.on("call", (response) => {
+      console.error("**call response", response);
       switch (response.type) {
         case "CALL_RECEIVED":
           const full_name = this.findUserName(response.from);
           this.calling.callerName = full_name;
-          this.calling.templateName = response.call_type == 'video' ? 'incommingVideoCall' : 'incommingAudioCall';
+          this.calling.templateName =
+            response.call_type == "video"
+              ? "incommingVideoCall"
+              : "incommingAudioCall";
           this.calling.call_type = response.call_type;
           this.changeDetector.detectChanges();
-          this.screen = 'MAIN';
+          this.screen = "MAIN";
+          break;
+        case "PARTICIPANT_LEFT":
+          this.toastr.error("", "User has ended the call");
           break;
         case "CALL_ENDED":
           this.resetCall();
           break;
         case "MISSED_CALL":
           this.resetCall();
-          this.toastr.error("Opps", 'Missed Call')
+          this.toastr.error("Opps", "Missed Call");
           break;
         case "CALL_REJECTED":
           this.resetCall();
-          this.toastr.error("Opps", 'user is busy')
+          this.toastr.error("Opps", "user is busy");
           break;
         case "CALL_ACCEPTED":
           this.changeDetector.detectChanges();
-          this.calling.templateName = this.calling.call_type == 'video' ? 'VideoCallInProgress' : 'AudioCallInProgress';
+          this.calling.templateName =
+            this.calling.call_type == "video"
+              ? "VideoCallInProgress"
+              : "AudioCallInProgress";
           this.startWatch();
           this.changeDetector.detectChanges();
           break;
         case "CALL_STATUS":
-          const displaystyle = response.video_status ? 'block' : 'none';
-          const callerHolderstyle = response.video_status ? 'none' : 'block';
-          if (document.getElementById('remoteVideo')) document.getElementById('remoteVideo').style.display = displaystyle;
-          if (document.getElementById('callerHolder')) document.getElementById('callerHolder').style.display = callerHolderstyle;
-          this.settings.remoteVideoMicrophone =  response.audio_status
+          const displaystyle = response.video_status ? "block" : "none";
+          const callerHolderstyle = response.video_status ? "none" : "block";
+          if (document.getElementById("remoteVideo"))
+            document.getElementById("remoteVideo").style.display = displaystyle;
+          if (document.getElementById("callerHolder"))
+            document.getElementById("callerHolder").style.display =
+              callerHolderstyle;
+          this.settings.remoteVideoMicrophone = response.audio_status;
           break;
       }
     });
@@ -123,38 +145,42 @@ export class CallComponent implements OnInit {
 
   ngAfterViewInit(): void {
     if (this.searchInput) {
-      fromEvent(this.searchInput.nativeElement, 'input')
+      fromEvent(this.searchInput.nativeElement, "input")
         .pipe(
           map((event: Event) => (event.target as HTMLInputElement).value),
           debounceTime(1000),
           distinctUntilChanged(),
-          startWith(''),
-          mergeMap(value => {
+          startWith(""),
+          mergeMap((value) => {
             this.loading = true;
             if (!value) {
               const data = {
                 sorting: "ORDER BY full_name ASC",
                 search_field: "full_name",
-                search_value: '',
+                search_value: "",
                 condition: "contains",
-              }
-              return this.svc.post('AllUsers', data).pipe(map(res => {
-                this.CopyAllUsers = [...res.users];
-                return res;
-              }))
+              };
+              return this.svc.post("AllUsers", data).pipe(
+                map((res) => {
+                  this.CopyAllUsers = [...res.users];
+                  return res;
+                })
+              );
             }
             const temparaay = [...this.CopyAllUsers];
-            const filteruser = temparaay.filter(user => {
+            const filteruser = temparaay.filter((user) => {
               let searchValue = value.toLowerCase();
-              if (user.full_name.toLowerCase().startsWith(searchValue)) { return -1; }
+              if (user.full_name.toLowerCase().startsWith(searchValue)) {
+                return -1;
+              }
             });
             const returnData = {
-              users: filteruser
-            }
-            return of(returnData)
-          }),
+              users: filteruser,
+            };
+            return of(returnData);
+          })
         )
-        .subscribe(res => {
+        .subscribe((res) => {
           this.loading = false;
           if (!res.users || !res.users.length) {
             this.toastr.error("Opps!", "No contacts found");
@@ -162,7 +188,7 @@ export class CallComponent implements OnInit {
           } else {
             this.AllUsers = res.users;
           }
-        })
+        });
     }
 
     this.changeDetector.detectChanges();
@@ -181,8 +207,8 @@ export class CallComponent implements OnInit {
       search_field: "full_name",
       search_value: this.searchInput.nativeElement.value,
       condition: "contains",
-    }
-    this.svc.post('AllUsers', data).subscribe(res => {
+    };
+    this.svc.post("AllUsers", data).subscribe((res) => {
       this.loading = false;
       if (!res.users || !res.users.length) {
         this.toastr.error("Opps!", "No contacts found");
@@ -191,22 +217,22 @@ export class CallComponent implements OnInit {
         this.CopyAllUsers = [...res.users];
         this.AllUsers = res.users;
       }
-    })
+    });
   }
 
   findUserName(ref_id: string): string {
-    const user = FindArrayObject(this.CopyAllUsers, 'ref_id', ref_id);
-    return user ? user.full_name : '';
+    const user = FindArrayObject(this.CopyAllUsers, "ref_id", ref_id);
+    return user ? user.full_name : "";
   }
 
   logout() {
     this.pubsubService.Disconnect();
     StorageService.clearLocalStorge();
-    this.router.navigate(['login']);
+    this.router.navigate(["login"]);
   }
 
   rejectedCall() {
-    this.calling.templateName = 'noCall';
+    this.calling.templateName = "noCall";
     this.changeDetector.detectChanges();
     this.pubsubService.Client.endCall();
   }
@@ -215,24 +241,24 @@ export class CallComponent implements OnInit {
     this.settings = {
       isOnInProgressCamara: true,
       isOnInProgressMicrophone: true,
-      remoteVideoMicrophone:true
-    }
+      remoteVideoMicrophone: true,
+    };
     this.calling = {
-      call_type: 'video',
-      templateName: 'noCall',
-      callerName: ''
-    }
+      call_type: "video",
+      templateName: "noCall",
+      callerName: "",
+    };
     this.callTime = 0;
-    this.screen = 'LISTING';
+    this.screen = "LISTING";
     if (this.countDownTime) {
-      this.countDownTime.unsubscribe()
+      this.countDownTime.unsubscribe();
     }
-    document.getElementById('localVideo').style.display = 'block';
+    document.getElementById("localVideo").style.display = "block";
     this.changeDetector.detectChanges();
   }
 
   stopCall() {
-    this.calling.templateName = 'noCall';
+    this.calling.templateName = "noCall";
     this.pubsubService.endCall();
     this.resetCall();
     this.changeDetector.detectChanges();
@@ -240,28 +266,34 @@ export class CallComponent implements OnInit {
   }
 
   inCall(): boolean {
-    return this.calling.templateName != 'noCall';
+    return this.calling.templateName != "noCall";
   }
 
   startVideoCall(user) {
     if (this.inCall()) return;
-    document.getElementById('localVideo').style.display = 'block';
-    this.screen = 'MAIN';
-    this.calling.templateName = 'outgoingVideoCall';
-    this.calling['callerName'] = user['full_name'];
+    document.getElementById("localVideo").style.display = "block";
+    this.screen = "MAIN";
+    this.calling.templateName = "outgoingVideoCall";
+    this.calling["callerName"] = user["full_name"];
     this.changeDetector.detectChanges();
     const params = {
       localVideo: document.getElementById("localVideo"),
       remoteVideo: document.getElementById("remoteVideo"),
       to: [user.ref_id],
-    }
+    };
     this.pubsubService.Call(params);
   }
 
   acceptcall() {
-    this.pubsubService.acceptCall(document.getElementById("localVideo"), document.getElementById("remoteVideo"));
+    this.pubsubService.acceptCall(
+      document.getElementById("localVideo"),
+      document.getElementById("remoteVideo")
+    );
     this.changeDetector.detectChanges();
-    this.calling.templateName = this.calling.call_type == 'video' ? 'VideoCallInProgress' : 'AudioCallInProgress';
+    this.calling.templateName =
+      this.calling.call_type == "video"
+        ? "VideoCallInProgress"
+        : "AudioCallInProgress";
     this.startWatch();
     this.changeDetector.detectChanges();
   }
@@ -274,30 +306,37 @@ export class CallComponent implements OnInit {
 
   startAudioCall(user) {
     if (this.inCall()) return;
-    this.calling.call_type = 'audio';
-    this.screen = 'MAIN';
-    this.calling.templateName = 'outgoingAudioCall';
+    this.calling.call_type = "audio";
+    this.screen = "MAIN";
+    this.calling.templateName = "outgoingAudioCall";
     this.calling.callerName = user.full_name;
     const params = {
       localVideo: document.getElementById("localVideo"),
       remoteVideo: document.getElementById("remoteVideo"),
       to: [user.ref_id],
-    }
+    };
     this.pubsubService.audioCall(params);
   }
 
   changeSettings(filed) {
     this.settings[filed] = !this.settings[filed];
     switch (filed) {
-      case 'isOnInProgressCamara':
-        this.settings[filed] ? this.pubsubService.setCameraOn() : this.pubsubService.setCameraOff();
-        const displaystyle = this.settings[filed] ? 'block' : 'none';
-        if (document.getElementById('localVideo')) document.getElementById('localVideo').style.display = displaystyle;
+      case "isOnInProgressCamara":
+        this.settings[filed]
+          ? this.pubsubService.setCameraOn()
+          : this.pubsubService.setCameraOff();
+        const displaystyle = this.settings[filed] ? "block" : "none";
+        if (document.getElementById("localVideo"))
+          document.getElementById("localVideo").style.display = displaystyle;
         break;
-      case 'isOnInProgressMicrophone':
-        this.settings[filed] ? this.pubsubService.setMicUnmute() : this.pubsubService.setMicMute();
+      case "isOnInProgressMicrophone":
+        this.settings[filed]
+          ? this.pubsubService.setMicUnmute()
+          : this.pubsubService.setMicMute();
         const enabled = this.settings[filed];
-        const audiotrack: any = (<HTMLInputElement>document.getElementById("localAudio"));
+        const audiotrack: any = <HTMLInputElement>(
+          document.getElementById("localAudio")
+        );
         if (audiotrack && audiotrack.audioTracks) {
           audiotrack.audioTracks[0].enabled = enabled;
         }
@@ -305,33 +344,36 @@ export class CallComponent implements OnInit {
     }
   }
 
-
   isHideThread(): boolean {
-    return isMobile() ? this.screen != 'LISTING' : false;
+    return isMobile() ? this.screen != "LISTING" : false;
   }
 
   isHideChatScreen(): boolean {
-    return isMobile() ? this.screen != 'MAIN' : false;
+    return isMobile() ? this.screen != "MAIN" : false;
   }
 
-
   isHideRemoteVideo(): boolean {
-    const ishide = !(this.calling.templateName == 'VideoCallInProgress' && this.calling.call_type == 'video');
+    const ishide = !(
+      this.calling.templateName == "VideoCallInProgress" &&
+      this.calling.call_type == "video"
+    );
     return ishide;
   }
 
   isHideLocalVideo(): boolean {
-    const ishide = !(this.calling.templateName == 'VideoCallInProgress' || this.calling.templateName == 'outgoingVideoCall');
+    const ishide = !(
+      this.calling.templateName == "VideoCallInProgress" ||
+      this.calling.templateName == "outgoingVideoCall"
+    );
     return ishide;
   }
 
   isMobile() {
-    return window.innerWidth < 768
+    return window.innerWidth < 768;
   }
 
   backScreen() {
     this.screen = "CHAT";
     this.changeDetector.detectChanges();
   }
-
 }
