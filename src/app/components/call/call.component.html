@@ -143,7 +143,7 @@
     <audio id="Incomingaudio" autoplay src="./assets/images/calling_you.mp3" preload="auto"></audio>
     <img src="./assets/images/audio2.png" class="audioIcon" />
     <div style="width: 150px" class="callButtonsContainer">
-      <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+      <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="rejectCall()" />
       <img src="./assets/images/Accept-button.png" class="responseButtonImg" (click)="acceptcall()" />
     </div>
   </div>
@@ -187,7 +187,7 @@
     <p style="color:white" class="callerName text-capitalize">{{ calling['callerName'] }}</p>
     <img src="./assets/images/audio2.png" class="audioIcon" />
     <div style="width:140px" class="callButtonsContainer">
-      <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="stopCall()" />
+      <img src="./assets/images/decline-button.png" class="responseButtonImg" (click)="rejectCall()" />
       <img src="./assets/images/Accept-button.png" class="responseButtonImg" (click)="acceptcall()" />
     </div>
   </div>

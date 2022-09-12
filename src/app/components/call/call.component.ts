@@ -57,6 +57,7 @@ export class CallComponent implements OnInit {
     isOnInProgressMicrophone: true,
     remoteVideoMicrophone: true,
   };
+  incomingCallSessionId: any;
 
   get selectedTemplate() {
     const templateList = {
@@ -105,6 +106,7 @@ export class CallComponent implements OnInit {
           this.calling.call_type = response.call_type;
           this.changeDetector.detectChanges();
           this.screen = "MAIN";
+          this.incomingCallSessionId = response.uuid;
           break;
         case "PARTICIPANT_LEFT":
           this.toastr.error("", "User has ended the call");
@@ -264,6 +266,13 @@ export class CallComponent implements OnInit {
     this.changeDetector.detectChanges();
     console.error("stopCall");
   }
+  rejectCall() {
+    this.calling.templateName = "noCall";
+    this.pubsubService.rejectCall();
+    this.resetCall();
+    this.changeDetector.detectChanges();
+    console.error("rejectCall");
+  }
 
   inCall(): boolean {
     return this.calling.templateName != "noCall";
@@ -287,7 +296,8 @@ export class CallComponent implements OnInit {
   acceptcall() {
     this.pubsubService.acceptCall(
       document.getElementById("localVideo"),
-      document.getElementById("remoteVideo")
+      document.getElementById("remoteVideo"),
+      this.incomingCallSessionId
     );
     this.changeDetector.detectChanges();
     this.calling.templateName =

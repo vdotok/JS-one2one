@@ -38,8 +38,8 @@ export class PubsubService {
     this.Client.AudioCall(params);
   }
 
-  acceptCall(local, remote): void {
-    this.Client.AcceptCall(local, remote);
+  acceptCall(local, remote, uuid): void {
+    this.Client.AcceptCall(local, remote, uuid);
   }
 
   rejectCall(): void {
