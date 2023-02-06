@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from "@angular/router";
 import FormsHandler from '../../shared/FormsHandler/FormsHandler';
 import { AuthService } from '../../shared/auth/auth.service';
@@ -13,13 +13,13 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 })
 export class SignUpComponent implements OnInit {
 
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   loading = false;
   formError:any;
 
   constructor(
     private router: Router,
-    private _fb: FormBuilder,
+    private _fb: UntypedFormBuilder,
     public auth: AuthService
   ) { }
 
@@ -34,12 +34,12 @@ export class SignUpComponent implements OnInit {
 
   buildForm() {
     this.loginForm = this._fb.group({
-      'full_name': new FormControl('', [Validators.required, ValidationService.usernameValidator, Validators.minLength(4), Validators.maxLength(100)]),
-      'device_type': new FormControl('web', [Validators.required]),
-      'device_model': new FormControl('web', [Validators.required]),
-      'device_os_ver': new FormControl(navigator.platform, [Validators.required]),
-      'email': new FormControl(null, [ValidationService.emailValidator, Validators.required]),
-      'password': new FormControl(null, [Validators.required])
+      'full_name': new UntypedFormControl('', [Validators.required, ValidationService.usernameValidator, Validators.minLength(4), Validators.maxLength(100)]),
+      'device_type': new UntypedFormControl('web', [Validators.required]),
+      'device_model': new UntypedFormControl('web', [Validators.required]),
+      'device_os_ver': new UntypedFormControl(navigator.platform, [Validators.required]),
+      'email': new UntypedFormControl(null, [ValidationService.emailValidator, Validators.required]),
+      'password': new UntypedFormControl(null, [Validators.required])
     }, { updateOn: 'change' });
     console.log('this.signupForm', this.loginForm);
   }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from "@angular/router";
 import { StorageService } from 'src/app/shared/services/storage.service';
 import FormsHandler from '../../shared/FormsHandler/FormsHandler';
@@ -12,13 +12,13 @@ import { AuthService } from '../../shared/auth/auth.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   loading: boolean = false;
   formError: string = '';
 
   constructor(
     private router: Router,
-    private _fb: FormBuilder,
+    private _fb: UntypedFormBuilder,
     public auth: AuthService
   ) { }
 
@@ -36,8 +36,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   buildForm() {
     this.loginForm = this._fb.group({
-      'email': new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]),
-      'password': new FormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(14)])
+      'email': new UntypedFormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]),
+      'password': new UntypedFormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(14)])
     }, { updateOn: 'change' });
   }
 
