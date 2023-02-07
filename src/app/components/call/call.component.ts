@@ -108,7 +108,7 @@ export class CallComponent implements OnInit {
           this.calling.call_type = response.call_type;
           this.changeDetector.detectChanges();
           this.screen = 'MAIN';
-          this.incomingCallSessionId = response.uuid;
+          this.incomingCallSessionId = response.uuid ?? response.sessionUUID;
           break;
         case 'PARTICIPANT_LEFT':
           this.toastr.error('', 'User has ended the call');
@@ -299,11 +299,13 @@ export class CallComponent implements OnInit {
   }
 
   acceptcall() {
-    this.pubsubService.acceptCall(
-      document.getElementById('localVideo'),
-      document.getElementById('remoteVideo'),
-      this.incomingCallSessionId
-    );
+    this.pubsubService.acceptCall({
+      localVideo: document.getElementById('localVideo'),
+      remoteVideo: document.getElementById('remoteVideo'),
+      sessionUUID: this.incomingCallSessionId,
+      audio: 1,
+      video: this.calling.call_type == 'video'
+    });
     this.changeDetector.detectChanges();
     this.calling.templateName =
       this.calling.call_type == 'video'
