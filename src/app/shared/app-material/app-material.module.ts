@@ -59,6 +59,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         MatProgressSpinnerModule
     ],
     declarations: [],
+  entryComponents: [],
     providers: [
         { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig }
     ],

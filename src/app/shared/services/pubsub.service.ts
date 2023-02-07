@@ -15,9 +15,7 @@ export class PubsubService {
       // projectID: "143LV8M8",
       //projectID: "6NE92I",
       projectID: "115G1WZI",
-      // secret: "3d9686b635b15b5bc2d19800407609fa",
-      //host: `${user.media_server_map.protocol}://${user.media_server_map.host}:${user.media_server_map.port}/${user.media_server_map.end_point}`
-      host: 'wss://r-signalling.vdotok.dev:8443/call',
+      host: `${user.media_server_map.complete_address}`,
       stunServer: user.stun_server_map ? user.stun_server_map.complete_address : ''
     });
     this.Client.on("connected", (res) => {
