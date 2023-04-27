@@ -292,8 +292,10 @@ export class CallComponent implements OnInit {
       localVideo: document.getElementById('localVideo'),
       remoteVideo: document.getElementById('remoteVideo'),
       to: [user.ref_id],
-        audio: 1,
-        video: 1
+      audio: 1,
+      video: 1,
+      timeout:40,
+      isPeer:1
     };
     this.pubsubService.Call(params);
   }
@@ -302,7 +304,7 @@ export class CallComponent implements OnInit {
     this.pubsubService.acceptCall({
       localVideo: document.getElementById('localVideo'),
       remoteVideo: document.getElementById('remoteVideo'),
-      sessionUUID: this.incomingCallSessionId,
+      sessionUuid: this.incomingCallSessionId,
       audio: 1,
       video: this.calling.call_type == 'video'
     });
