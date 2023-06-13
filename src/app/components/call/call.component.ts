@@ -295,7 +295,7 @@ export class CallComponent implements OnInit {
       audio: 1,
       video: 1,
       timeout:40,
-      isPeer:1
+      isPeer:0
     };
     this.pubsubService.Call(params);
   }
@@ -333,6 +333,10 @@ export class CallComponent implements OnInit {
       localVideo: document.getElementById('localVideo'),
       remoteVideo: document.getElementById('remoteVideo'),
       to: [user.ref_id],
+      audio: 1,
+      video: 0,
+      timeout:40,
+      isPeer:0
     };
     this.pubsubService.audioCall(params);
   }
