@@ -14,9 +14,10 @@ export class PubsubService {
     this.Client = new CVDOTOK.Client({
       // projectId: "143LV8M8",
       //projectId: "6NE92I",
-      projectId: "1RN1RP",
+      projectId: "739GDLR",
       host: `${user.media_server_map.complete_address}`,
-      stunServer: user.stun_server_map ? user.stun_server_map.complete_address : ''
+      stunServer: user.stun_server_map ? user.stun_server_map.complete_address : '',
+      ignorePublicIP: true
     });
     this.Client.on("connected", (res) => {
       let user = StorageService.getUserData();
