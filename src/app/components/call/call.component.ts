@@ -102,13 +102,13 @@ export class CallComponent implements OnInit {
           const full_name = this.findUserName(response.from);
           this.calling.callerName = full_name;
           this.calling.templateName =
-            response.call_type == 'video'
+            response.callType == 'video'
               ? 'incommingVideoCall'
               : 'incommingAudioCall';
-          this.calling.call_type = response.call_type;
+          this.calling.call_type = response.callType;
           this.changeDetector.detectChanges();
           this.screen = 'MAIN';
-          this.incomingCallSessionId = response.uuid ?? response.sessionUUID;
+          this.incomingCallSessionId = response.uuid ?? response.sessionUuid;
           break;
         case 'PARTICIPANT_LEFT':
           this.toastr.error('', 'User has ended the call');
