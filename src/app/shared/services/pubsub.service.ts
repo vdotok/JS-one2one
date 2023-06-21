@@ -14,7 +14,7 @@ export class PubsubService {
     this.Client = new CVDOTOK.Client({
       // projectId: "143LV8M8",
       //projectId: "6NE92I",
-      projectId: "739GDLR",
+      projectId: "1KMMRG",
       host: `${user.media_server_map.complete_address}`,
       stunServer: user.stun_server_map ? user.stun_server_map.complete_address : '',
       ignorePublicIP: true
