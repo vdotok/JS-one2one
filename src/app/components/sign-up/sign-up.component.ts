@@ -5,6 +5,7 @@ import FormsHandler from '../../shared/FormsHandler/FormsHandler';
 import { AuthService } from '../../shared/auth/auth.service';
 import { ValidationService } from 'src/app/shared/validators';
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { PROJECT_ID } from 'src/constants/const';
 
 @Component({
   selector: 'sign-up',
@@ -48,7 +49,7 @@ export class SignUpComponent implements OnInit {
     FormsHandler.validateForm(this.loginForm);
     if (this.loginForm.invalid) return;
     const saveData = this.loginForm.value;
-    saveData.project_id = '1KMMRG';
+    saveData.project_id = PROJECT_ID;
     this.loading = true;
     this.formError = null;
     this.auth.signup(saveData).subscribe(v => {

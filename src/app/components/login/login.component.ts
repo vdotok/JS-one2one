@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { StorageService } from 'src/app/shared/services/storage.service';
 import FormsHandler from '../../shared/FormsHandler/FormsHandler';
 import { AuthService } from '../../shared/auth/auth.service';
+import { PROJECT_ID } from 'src/constants/const';
 
 @Component({
   selector: 'login',
@@ -45,7 +46,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     FormsHandler.validateForm(this.loginForm);
     if (this.loginForm.invalid) return;
     const saveData = this.loginForm.value;
-    saveData.project_id = '1KMMRG';
+    saveData.project_id = PROJECT_ID;
     this.loading = true;
     this.formError = null;
     this.auth.login(saveData).subscribe(v => {

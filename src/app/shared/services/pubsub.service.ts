@@ -1,23 +1,23 @@
-import { Injectable, Output } from '@angular/core';
-import { StorageService } from './storage.service';
+import { Injectable, Output } from "@angular/core";
+import { StorageService } from "./storage.service";
+import { PROJECT_ID } from "src/constants/const";
 declare const CVDOTOK: any;
 
 @Injectable()
 export class PubsubService {
   @Output() public Client: any;
 
-  constructor() {
-  }
+  constructor() {}
 
   public initConfigure(): void {
     const user = StorageService.getUserData();
     this.Client = new CVDOTOK.Client({
-      // projectId: "143LV8M8",
-      //projectId: "6NE92I",
-      projectId: "1KMMRG",
+      projectId: PROJECT_ID,
       host: `${user.media_server_map.complete_address}`,
-      stunServer: user.stun_server_map ? user.stun_server_map.complete_address : '',
-      ignorePublicIP: true
+      stunServer: user.stun_server_map
+        ? user.stun_server_map.complete_address
+        : "",
+      ignorePublicIP: true,
     });
     this.Client.on("connected", (res) => {
       let user = StorageService.getUserData();
@@ -71,5 +71,4 @@ export class PubsubService {
   setMicUnmute(): void {
     this.Client.SetMicUnmute();
   }
-
 }
