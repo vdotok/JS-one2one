@@ -3,7 +3,6 @@ export class StorageService {
   static readonly STORAGE_KEY_AUTH_TOKEN = 'auth_token';
   static readonly STORAGE_KEY_USER_NAME = 'username';
   static readonly STORAGE_KEY_USER_DATA = 'user_data';
-  static readonly PROJECT_ID = 'project_id';
 
   static clearLocalStorge() {
     localStorage.clear();
@@ -46,12 +45,5 @@ export class StorageService {
   static removeUserData() {
     localStorage.removeItem(StorageService.STORAGE_KEY_USER_DATA);
   }
-  static getProjectID(){
-    if(localStorage.getItem(StorageService.PROJECT_ID)){
-      return JSON.parse(localStorage.getItem(StorageService.PROJECT_ID));
-    }
-  }
-  static setProjectID(project_id){
-    localStorage.setItem(StorageService.PROJECT_ID, JSON.stringify(project_id));
-  }
+
 }

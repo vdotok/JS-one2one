@@ -49,6 +49,7 @@ export class StorageService {
   static getProjectID(){
     if(localStorage.getItem(StorageService.PROJECT_ID)){
       return JSON.parse(localStorage.getItem(StorageService.PROJECT_ID));
+
     }
   }
   static setProjectID(project_id){

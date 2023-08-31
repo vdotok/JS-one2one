@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.auth.login(saveData).subscribe(v => {
       this.loading = false;
       if (v && v.status == 200) {
-        StorageService.setProjectID(saveData.project_id);
+        window.localStorage.setItem('project_id' , '' )
         StorageService.setUserData(v);
         StorageService.setAuthToken(v.auth_token);
         StorageService.setAuthUsername(v.ref_id);

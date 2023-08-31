@@ -37,8 +37,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   buildForm() {
     this.loginForm = this._fb.group({
       'email': new UntypedFormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]),
-      'password': new UntypedFormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(14)]),
-      'project_id': new UntypedFormControl('' , [Validators.required ])
+      'password': new UntypedFormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(14)])
     }, { updateOn: 'change' });
   }
 
@@ -46,14 +45,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     FormsHandler.validateForm(this.loginForm);
     if (this.loginForm.invalid) return;
     const saveData = this.loginForm.value;
-    console.log("saveDatasaveData" , saveData);
-    // saveData.project_id = '1KMMRG';
+    saveData.project_id = '1KMMRG';
     this.loading = true;
     this.formError = null;
     this.auth.login(saveData).subscribe(v => {
       this.loading = false;
       if (v && v.status == 200) {
-        StorageService.setProjectID(saveData.project_id);
         StorageService.setUserData(v);
         StorageService.setAuthToken(v.auth_token);
         StorageService.setAuthUsername(v.ref_id);

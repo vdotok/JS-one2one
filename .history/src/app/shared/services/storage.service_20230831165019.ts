@@ -47,9 +47,7 @@ export class StorageService {
     localStorage.removeItem(StorageService.STORAGE_KEY_USER_DATA);
   }
   static getProjectID(){
-    if(localStorage.getItem(StorageService.PROJECT_ID)){
-      return JSON.parse(localStorage.getItem(StorageService.PROJECT_ID));
-    }
+    return JSON.parse(localStorage.getItem(StorageService.PROJECT_ID));
   }
   static setProjectID(project_id){
     localStorage.setItem(StorageService.PROJECT_ID, JSON.stringify(project_id));

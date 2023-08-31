@@ -40,7 +40,7 @@ export class SignUpComponent implements OnInit {
       'device_os_ver': new UntypedFormControl(navigator.platform, [Validators.required]),
       'email': new UntypedFormControl(null, [ValidationService.emailValidator, Validators.required]),
       'password': new UntypedFormControl(null, [Validators.required]),
-      'project_id': new UntypedFormControl('' , [Validators.required ])
+      'projectID': new UntypedFormControl('' , [Validators.required ])
     }, { updateOn: 'change' });
     console.log('this.signupForm', this.loginForm);
   }
@@ -56,7 +56,6 @@ export class SignUpComponent implements OnInit {
     this.auth.signup(saveData).subscribe(v => {
       this.loading = false;
       if (v && v.status == 200) {
-        StorageService.setProjectID(saveData.project_id);
         StorageService.setUserData(v);
         StorageService.setAuthToken(v.auth_token);
         StorageService.setAuthUsername(v.ref_id);

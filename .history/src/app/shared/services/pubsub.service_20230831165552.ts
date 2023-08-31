@@ -11,21 +11,24 @@ export class PubsubService {
 
   public initConfigure(): void {
     const user = StorageService.getUserData();
-    this.Client = new CVDOTOK.Client({
-      // projectId: "143LV8M8",
-      //projectId: "6NE92I",
-      projectId: StorageService.getProjectID(),
-      host: `${user.media_server_map.complete_address}`,
-      stunServer: user.stun_server_map ? user.stun_server_map.complete_address : '',
-      ignorePublicIP: true
-    });
-    this.Client.on("connected", (res) => {
-      let user = StorageService.getUserData();
-      this.Client.Register(
-        user.ref_id.toString(),
-        user.authorization_token.toString()
-      );
-    });
+    if(StorageService.getProjectID()){
+      this.Client = new CVDOTOK.Client({
+        // projectId: "143LV8M8",
+        //projectId: "6NE92I",
+        projectId: StorageService.getProjectID(),
+        host: `${user.media_server_map.complete_address}`,
+        stunServer: user.stun_server_map ? user.stun_server_map.complete_address : '',
+        ignorePublicIP: true
+      });
+      this.Client.on("connected", (res) => {
+        let user = StorageService.getUserData();
+        this.Client.Register(
+          user.ref_id.toString(),
+          user.authorization_token.toString()
+        );
+      });
+    }
+  
   }
 
   public Disconnect(): void {
